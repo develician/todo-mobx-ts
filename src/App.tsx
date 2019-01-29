@@ -1,25 +1,46 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { observer } from 'mobx-react';
+import { todoState } from './mobx/todoState';
+import { TodoInput } from './TodoInput';
 
-class App extends Component {
+@observer
+class App extends React.Component<{}> {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ fontSize: '1.8rem', fontWeight: 800 }}>TODO-MOBX</div>
+        <form
+          style={{ display: 'flex', flexDirection: 'column' }}
+          onSubmit={e => {
+            e.preventDefault();
+            todoState.addTodo();
+          }}
+        >
+          <TodoInput todoInputState={todoState.todoInput} />
+          <button style={{ marginTop: '1rem' }} type="submit">
+            ADD TODO
+          </button>
+          <button
+            style={{ marginTop: '1rem' }}
+            type="reset"
+            onClick={e => {
+              todoState.reset();
+            }}
           >
-            Learn React
-          </a>
-        </header>
+            RESET TODO
+          </button>
+          <ul>
+            {todoState.todos.map((todo, i) => (
+              <li key={todo.id}>{todo.content}</li>
+            ))}
+          </ul>
+        </form>
       </div>
     );
   }
